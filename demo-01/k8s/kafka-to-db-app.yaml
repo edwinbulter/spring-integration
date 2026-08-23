@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-to-db-app
+  namespace: demo-01
+  labels:
+    app: kafka-to-db-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-to-db-app
+  template:
+    metadata:
+      labels:
+        app: kafka-to-db-app
+    spec:
+      containers:
+      - name: kafka-to-db-app
+        image: kafka-to-db-app:demo-01
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "kafka:9092"
+        - name: KAFKA_TOPIC
+          value: "topic-01"
+        - name: KAFKA_CONSUMER_GROUP_ID
+          value: "kafka-to-db-app"
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:postgresql://postgres:5432/demo01"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "demo01"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "demo01"

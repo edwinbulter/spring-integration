@@ -6,7 +6,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEMO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 CLUSTER_NAME="single-node"
-APPS=("file-to-kafka-app" "kafka-to-file-app")
+APPS=("file-to-kafka-app" "kafka-to-file-app" "kafka-to-db-app")
 
 echo "==> Building demo-01 (mvn package)..."
 mvn -f "${DEMO_DIR}/pom.xml" -q package

@@ -16,15 +16,23 @@ kubectl apply -f "${K8S_DIR}/namespace.yaml"
 echo "==> Applying kafka..."
 kubectl apply -f "${K8S_DIR}/kafka.yaml"
 
+echo "==> Applying postgres..."
+kubectl apply -f "${K8S_DIR}/postgres.yaml"
+
 echo "==> Waiting for kafka to become ready..."
 kubectl -n demo-01 rollout status deployment/kafka --timeout=180s
+
+echo "==> Waiting for postgres to become ready..."
+kubectl -n demo-01 rollout status deployment/postgres --timeout=180s
 
 echo "==> Applying apps..."
 kubectl apply -f "${K8S_DIR}/file-to-kafka-app.yaml"
 kubectl apply -f "${K8S_DIR}/kafka-to-file-app.yaml"
+kubectl apply -f "${K8S_DIR}/kafka-to-db-app.yaml"
 
 kubectl -n demo-01 rollout status deployment/file-to-kafka-app --timeout=120s
 kubectl -n demo-01 rollout status deployment/kafka-to-file-app --timeout=120s
+kubectl -n demo-01 rollout status deployment/kafka-to-db-app --timeout=120s
 
 echo "==> demo-01 deployed. Pods:"
 kubectl -n demo-01 get pods

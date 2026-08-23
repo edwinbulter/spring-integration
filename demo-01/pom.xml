@@ -20,5 +20,6 @@
     <modules>
         <module>file-to-kafka-app</module>
         <module>kafka-to-file-app</module>
+        <module>kafka-to-db-app</module>
     </modules>
 </project>

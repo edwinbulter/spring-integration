@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: kafka-to-db-app
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP_ID:kafka-to-db-app}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/demo01}
+    username: ${SPRING_DATASOURCE_USERNAME:demo01}
+    password: ${SPRING_DATASOURCE_PASSWORD:demo01}
+
+kafka:
+  topic: ${KAFKA_TOPIC:topic-01}
+
+logging:
+  level:
+    com.example.demo01: INFO
