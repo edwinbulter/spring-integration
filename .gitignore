@@ -3,7 +3,10 @@ target/
 .idea/
 *.iml
 
-# Demo data folders: keep the directory structure, ignore actual file contents
-demo-*/data/*
+# Demo data folders: ignore everything underneath (including nested files, not
+# just the top level), but keep the directory structure via .gitkeep, and do
+# allow committing each demo's data/config.yml.
+demo-*/data/**
 !demo-*/data/*/
 !demo-*/data/*/.gitkeep
+!demo-*/data/config.yml
