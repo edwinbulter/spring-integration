@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quote-to-file-app
+  namespace: demo-01
+  labels:
+    app: quote-to-file-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quote-to-file-app
+  template:
+    metadata:
+      labels:
+        app: quote-to-file-app
+    spec:
+      containers:
+      - name: quote-to-file-app
+        image: quote-to-file-app:demo-01
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: QUOTE_INPUT_DIR
+          value: "/data/input-01"
+        - name: QUOTE_CONFIG_FILE
+          value: "/data/config.yml"
+        volumeMounts:
+        - name: input-01
+          mountPath: /data/input-01
+        - name: config
+          mountPath: /data/config.yml
+      volumes:
+      # References the wide /data/projects mount exposed by the kind node
+      # (see cluster/kind-config.yaml); only this demo's own input-01
+      # subdirectory and config.yml file are mounted into the container.
+      - name: input-01
+        hostPath:
+          path: /data/projects/spring-integration/demo-01/data/input-01
+          type: DirectoryOrCreate
+      - name: config
+        hostPath:
+          path: /data/projects/spring-integration/demo-01/data/config.yml
+          type: FileOrCreate

@@ -10,6 +10,15 @@ K8S_DIR="${DEMO_DIR}/k8s"
 echo "==> Ensuring host data directories exist..."
 mkdir -p "${DEMO_DIR}/data/input-01" "${DEMO_DIR}/data/processed-01" "${DEMO_DIR}/data/output-01"
 
+CONFIG_FILE="${DEMO_DIR}/data/config.yml"
+if [ ! -f "${CONFIG_FILE}" ]; then
+  echo "==> Creating default ${CONFIG_FILE}..."
+  cat > "${CONFIG_FILE}" <<'EOF'
+QuoteToFile:
+  periodInSeconds: 30
+EOF
+fi
+
 echo "==> Applying namespace..."
 kubectl apply -f "${K8S_DIR}/namespace.yaml"
 
@@ -29,10 +38,12 @@ echo "==> Applying apps..."
 kubectl apply -f "${K8S_DIR}/file-to-kafka-app.yaml"
 kubectl apply -f "${K8S_DIR}/kafka-to-file-app.yaml"
 kubectl apply -f "${K8S_DIR}/kafka-to-db-app.yaml"
+kubectl apply -f "${K8S_DIR}/quote-to-file-app.yaml"
 
 kubectl -n demo-01 rollout status deployment/file-to-kafka-app --timeout=120s
 kubectl -n demo-01 rollout status deployment/kafka-to-file-app --timeout=120s
 kubectl -n demo-01 rollout status deployment/kafka-to-db-app --timeout=120s
+kubectl -n demo-01 rollout status deployment/quote-to-file-app --timeout=120s
 
 echo "==> demo-01 deployed. Pods:"
 kubectl -n demo-01 get pods

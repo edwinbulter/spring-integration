@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: quote-to-file-app
+
+quote:
+  input-dir: ${QUOTE_INPUT_DIR:/data/input-01}
+  config-file: ${QUOTE_CONFIG_FILE:/data/config.yml}
+  default-period-seconds: ${QUOTE_DEFAULT_PERIOD_SECONDS:30}
+
+logging:
+  level:
+    com.example.demo01: INFO
