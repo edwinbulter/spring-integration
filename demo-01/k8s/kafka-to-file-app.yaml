@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-to-file-app
+  namespace: demo-01
+  labels:
+    app: kafka-to-file-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-to-file-app
+  template:
+    metadata:
+      labels:
+        app: kafka-to-file-app
+    spec:
+      containers:
+      - name: kafka-to-file-app
+        image: kafka-to-file-app:demo-01
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "kafka:9092"
+        - name: KAFKA_TOPIC
+          value: "topic-01"
+        - name: KAFKA_CONSUMER_GROUP_ID
+          value: "kafka-to-file-app"
+        - name: FILE_OUTPUT_DIR
+          value: "/data/output-01"
+        volumeMounts:
+        - name: output-01
+          mountPath: /data/output-01
+      volumes:
+      # References the wide /data/projects mount exposed by the kind node
+      # (see cluster/kind-config.yaml); only this demo's own subdirectory is
+      # mounted into the container.
+      - name: output-01
+        hostPath:
+          path: /data/projects/spring-integration/demo-01/data/output-01
+          type: DirectoryOrCreate

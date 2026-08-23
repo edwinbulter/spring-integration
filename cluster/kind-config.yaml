@@ -1,0 +1,32 @@
+# Shared kind cluster config for the "single-node" cluster, reused by every
+# demo in this monorepo (spring-integration/demo-01, demo-02, ...).
+#
+# IMPORTANT: `hostPath` below is intentionally RELATIVE ("..") rather than an
+# absolute /Users/... path, so this config stays portable across machines and
+# usernames. kind resolves relative extraMounts.hostPath values relative to
+# the current working directory at the moment `kind create cluster` runs --
+# NOT relative to this file's location. `create-cluster.sh` therefore always
+# `cd`s into the repo root before invoking kind, so ".." reliably points to
+# the parent workspace directory (e.g. .../IdeaProjects) regardless of who
+# runs it or from where.
+#
+# Only the kind node container gets this broad mount (much like the existing
+# /lib/modules mount kind adds by default) -- individual demo pods only ever
+# mount their own narrow subdirectory under it (see demo-01/k8s/*.yaml).
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "ingress-ready=true"
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 80
+    protocol: TCP
+  extraMounts:
+  - hostPath: ".."
+    containerPath: /data/projects

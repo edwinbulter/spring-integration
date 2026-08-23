@@ -1,0 +1,9 @@
+target/
+*.class
+.idea/
+*.iml
+
+# Demo data folders: keep the directory structure, ignore actual file contents
+demo-*/data/*
+!demo-*/data/*/
+!demo-*/data/*/.gitkeep

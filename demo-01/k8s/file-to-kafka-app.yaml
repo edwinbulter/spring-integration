@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: file-to-kafka-app
+  namespace: demo-01
+  labels:
+    app: file-to-kafka-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: file-to-kafka-app
+  template:
+    metadata:
+      labels:
+        app: file-to-kafka-app
+    spec:
+      containers:
+      - name: file-to-kafka-app
+        image: file-to-kafka-app:demo-01
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "kafka:9092"
+        - name: KAFKA_TOPIC
+          value: "topic-01"
+        - name: FILE_INPUT_DIR
+          value: "/data/input-01"
+        - name: FILE_PROCESSED_DIR
+          value: "/data/processed-01"
+        volumeMounts:
+        - name: input-01
+          mountPath: /data/input-01
+        - name: processed-01
+          mountPath: /data/processed-01
+      volumes:
+      # These hostPath volumes reference the wide /data/projects mount that
+      # the kind node exposes (see cluster/kind-config.yaml). Only this
+      # demo's own subdirectory is mounted into the container.
+      - name: input-01
+        hostPath:
+          path: /data/projects/spring-integration/demo-01/data/input-01
+          type: DirectoryOrCreate
+      - name: processed-01
+        hostPath:
+          path: /data/projects/spring-integration/demo-01/data/processed-01
+          type: DirectoryOrCreate

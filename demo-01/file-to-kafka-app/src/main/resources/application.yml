@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: file-to-kafka-app
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+file:
+  input-dir: ${FILE_INPUT_DIR:/data/input-01}
+  processed-dir: ${FILE_PROCESSED_DIR:/data/processed-01}
+  poll-delay-ms: ${FILE_POLL_DELAY_MS:2000}
+
+kafka:
+  topic: ${KAFKA_TOPIC:topic-01}
+
+logging:
+  level:
+    com.example.demo01: INFO

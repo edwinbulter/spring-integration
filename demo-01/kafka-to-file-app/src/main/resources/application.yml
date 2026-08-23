@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: kafka-to-file-app
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP_ID:kafka-to-file-app}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+file:
+  output-dir: ${FILE_OUTPUT_DIR:/data/output-01}
+
+kafka:
+  topic: ${KAFKA_TOPIC:topic-01}
+
+logging:
+  level:
+    com.example.demo01: INFO
