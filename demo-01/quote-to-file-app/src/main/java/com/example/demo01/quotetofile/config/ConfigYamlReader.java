@@ -11,24 +11,28 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Re-reads the external config.yml on every call (no caching), so that a change
  * to QuoteToFile.periodInSeconds is picked up on the very next 1-second tick.
  * Falls back to the configured default whenever the file is missing, unreadable
- * or does not contain a valid value.
+ * or does not contain a valid value. Logs whenever the effective period changes.
  */
 @Component
 public class ConfigYamlReader {
 
     private static final Logger log = LoggerFactory.getLogger(ConfigYamlReader.class);
+    private static final long UNSET = Long.MIN_VALUE;
 
     private final Path configFile;
     private final long defaultPeriodSeconds;
     private final Yaml yaml = new Yaml();
     // Avoids logging the same warning on every single tick.
     private final AtomicReference<String> lastWarning = new AtomicReference<>();
+    // Tracks the last effective period so changes can be logged.
+    private final AtomicLong lastPeriodSeconds = new AtomicLong(UNSET);
 
     public ConfigYamlReader(@Value("${quote.config-file}") String configFile,
                              @Value("${quote.default-period-seconds}") long defaultPeriodSeconds) {
@@ -37,6 +41,12 @@ public class ConfigYamlReader {
     }
 
     public long getPeriodInSeconds() {
+        long periodSeconds = resolvePeriodInSeconds();
+        logIfChanged(periodSeconds);
+        return periodSeconds;
+    }
+
+    private long resolvePeriodInSeconds() {
         try (InputStream in = Files.newInputStream(configFile)) {
             Object loaded = yaml.load(in);
             if (loaded instanceof Map<?, ?> root) {
@@ -56,6 +66,15 @@ public class ConfigYamlReader {
             warnOnce("Could not parse '" + configFile + "': " + e.getMessage());
         }
         return defaultPeriodSeconds;
+    }
+
+    private void logIfChanged(long periodSeconds) {
+        long previous = lastPeriodSeconds.getAndSet(periodSeconds);
+        if (previous == UNSET) {
+            log.info("QuoteToFile.periodInSeconds is {}s", periodSeconds);
+        } else if (previous != periodSeconds) {
+            log.info("QuoteToFile.periodInSeconds changed from {}s to {}s", previous, periodSeconds);
+        }
     }
 
     private void warnOnce(String message) {
