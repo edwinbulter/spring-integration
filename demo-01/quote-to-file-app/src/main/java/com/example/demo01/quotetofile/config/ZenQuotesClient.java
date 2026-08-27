@@ -20,13 +20,17 @@ public class ZenQuotesClient {
 
     private static final URI RANDOM_QUOTE_URI = URI.create("https://zenquotes.io/api/random");
 
-    private final HttpClient httpClient = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(10))
-            .build();
+    private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
 
     public ZenQuotesClient(ObjectMapper objectMapper) {
+        this(objectMapper, HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build());
+    }
+
+    // Package-private: allows tests to inject a mock HttpClient instead of hitting the real API.
+    ZenQuotesClient(ObjectMapper objectMapper, HttpClient httpClient) {
         this.objectMapper = objectMapper;
+        this.httpClient = httpClient;
     }
 
     /**

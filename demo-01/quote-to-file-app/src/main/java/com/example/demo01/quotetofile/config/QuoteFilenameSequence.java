@@ -13,10 +13,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 public class QuoteFilenameSequence {
 
+    private static final String FILENAME_FORMAT = "quote-%02d.txt";
+    private static final int SEQUENCE_SIZE = 100;
+
     private final AtomicInteger counter = new AtomicInteger(0);
 
     public String next() {
-        int number = counter.getAndUpdate(i -> (i + 1) % 100);
-        return String.format("quote-%02d.txt", number);
+        int number = counter.getAndUpdate(i -> (i + 1) % SEQUENCE_SIZE);
+        return String.format(FILENAME_FORMAT, number);
     }
 }

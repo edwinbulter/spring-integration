@@ -25,6 +25,7 @@ public class KafkaToFileHandler {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaToFileHandler.class);
     private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final String RECEIVED_LOG_MESSAGE = "message received from topic-01";
 
     private final ObjectMapper objectMapper;
     private final Path outputDir;
@@ -46,7 +47,7 @@ public class KafkaToFileHandler {
                 : root.putArray("logging");
         ObjectNode logEntry = objectMapper.createObjectNode();
         logEntry.put("timestamp", LocalDateTime.now().format(TIMESTAMP_FORMAT));
-        logEntry.put("message", "message received from topic-01");
+        logEntry.put("message", RECEIVED_LOG_MESSAGE);
         logging.add(logEntry);
 
         String updatedJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);

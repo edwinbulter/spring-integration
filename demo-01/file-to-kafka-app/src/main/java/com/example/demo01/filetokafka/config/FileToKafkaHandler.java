@@ -29,6 +29,7 @@ public class FileToKafkaHandler {
     private static final Logger log = LoggerFactory.getLogger(FileToKafkaHandler.class);
     private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter FILENAME_PREFIX_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
+    private static final String PROCESSED_LOG_MESSAGE = "file processed from folder input-01";
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
@@ -56,7 +57,7 @@ public class FileToKafkaHandler {
         String jsonFilename = timestampPrefix + "-" + baseName + ".json";
 
         LogEntry logEntry = new LogEntry(LocalDateTime.now().format(TIMESTAMP_FORMAT),
-                "file processed from folder input-01");
+                PROCESSED_LOG_MESSAGE);
         FileMessage fileMessage = new FileMessage(content, jsonFilename, List.of(logEntry));
 
         String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(fileMessage);

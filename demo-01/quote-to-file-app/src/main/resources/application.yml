@@ -6,6 +6,7 @@ quote:
   input-dir: ${QUOTE_INPUT_DIR:/data/input-01}
   config-file: ${QUOTE_CONFIG_FILE:/data/config.yml}
   default-period-seconds: ${QUOTE_DEFAULT_PERIOD_SECONDS:30}
+  poll-interval-ms: ${QUOTE_POLL_INTERVAL_MS:1000}
 
 logging:
   level:
