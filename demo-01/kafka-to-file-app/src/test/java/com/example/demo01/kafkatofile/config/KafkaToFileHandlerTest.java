@@ -37,6 +37,8 @@ class KafkaToFileHandlerTest {
 
         JsonNode written = readOutputFile("20260823-194000-test.json");
         assertThat(written.path("logging")).hasSize(2);
+        assertThat(written.path("logging").get(0).path("message").asText())
+                .isEqualTo("file processed from folder input-01");
         assertThat(written.path("logging").get(1).path("message").asText())
                 .isEqualTo("message received from topic-01");
     }
