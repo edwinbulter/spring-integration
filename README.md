@@ -1,6 +1,6 @@
 # Spring Integration Demo Repository
 
-This repository contains practical demonstrations of Spring Integration patterns and use cases. Each demo is a self-contained example showcasing different integration scenarios using the Spring Integration framework.
+This repository is created to build experience with Spring Integration in a Kubernetes environment. It demonstrates practical integration patterns using Spring Integration DSL, Kafka, file processing, and database operations running in a local kind cluster.
 
 ## What is Spring Integration?
 
@@ -42,32 +42,32 @@ For simpler use cases, consider these alternatives:
 - [Enterprise Integration Patterns](https://www.enterpriseintegrationpatterns.com/)
 - [Spring Integration DSL](https://docs.spring.io/spring-integration/reference/dsl.html)
 
-## Demo-01: File → Kafka → File/Database Pipeline
+## Current Demo: File → Kafka → File/Database Pipeline
 
-Demo-01 demonstrates a complete message processing pipeline using Spring Integration:
+The demo demonstrates a complete message processing pipeline using Spring Integration:
 
 - **quote-to-file-app**: Fetches quotes from an external API and writes them to files (custom message source with dynamic configuration)
 - **file-to-kafka-app**: Polls a directory, transforms files into JSON messages, and publishes to Kafka
 - **kafka-to-file-app**: Consumes Kafka messages and writes them as JSON files
 - **kafka-to-db-app**: Consumes the same Kafka messages independently and stores them in PostgreSQL
 
-This demo showcases:
+Key learning areas:
 - File polling with Spring Integration File adapter
 - Kafka integration with independent consumer groups
 - Message transformation and enrichment (adding metadata and logging entries)
 - Error handling with dedicated error channels
 - Running a complete integration pipeline in Kubernetes (kind cluster)
 
-For detailed information about demo-01, including the data flow, deployment instructions, and testing procedures, see [demo-01/README.md](demo-01/README.md).
+For detailed information including data flow, deployment instructions, and testing procedures, see [demo-01/README.md](demo-01/README.md).
 
 ## Repository Structure
 
-For detailed information about the monorepo structure, how to set up the shared kind cluster, and how to add new demos, see [doc/monorepo-structure.md](doc/monorepo-structure.md).
+The repository is structured as a monorepo to support adding future demos. For detailed information about the structure, how to set up the kind cluster, and how to add new demos, see [doc/monorepo-structure.md](doc/monorepo-structure.md).
 
 Quick overview:
-- Each demo is independent with its own `pom.xml` and Kubernetes namespace
-- All demos share the root `pom.xml` for dependency management and the `cluster/` configuration
-- Build individual demos with `mvn -f demo-XX/pom.xml package`
+- Currently contains one demo (demo-01) with its own `pom.xml` and Kubernetes namespace
+- Root `pom.xml` provides dependency management and the `cluster/` configuration
+- Build with `mvn -f demo-01/pom.xml package`
 
 ## Getting Started
 
